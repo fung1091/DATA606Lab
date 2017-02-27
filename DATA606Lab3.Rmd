@@ -1,0 +1,128 @@
+---
+title: "DATA606Lab3"
+author: "jim lung"
+date: "02-25-1017"
+output: html_document
+---
+```{r }
+download.file("http://www.openintro.org/stat/data/bdims.RData", destfile = "bdims.RData")
+load("bdims.RData")
+head(bdims)
+```
+
+
+```{r }
+mdims <- subset(bdims, sex == 1)
+fdims <- subset(bdims, sex == 0)
+```
+
+Execise 1
+
+Make a histogram of men¡¦s heights and a histogram of women¡¦s heights. How would you compare the various aspects of the two distributions?
+Histogram of men's heights
+```{r }
+mdims <- subset(bdims, sex == 1)
+fdims <- subset(bdims, sex == 0)
+hist(mdims$hgt, xlab="Men's height")
+```
+
+Histogram of womens's heights
+```{r }
+mdims <- subset(bdims, sex == 1)
+fdims <- subset(bdims, sex == 0)
+hist(fdims$hgt, xlab="Women's height")
+fhgtmean<-mean(fdims$hgt)
+fhgtsd<-sd(fdims$hgt)
+
+```
+
+```{r }
+summary(mdims$hgt)
+summary(fdims$hgt)
+
+
+```
+
+```{r }
+hist(fdims$hgt, ylim = c(0, 0.06),probability = TRUE)
+x <- 140:190
+y <- dnorm(x = x, mean = fhgtmean, sd = fhgtsd)
+lines(x = x, y = y, col = "blue")
+
+```
+
+Exercise 2
+Based on the this plot, does it appear that the data follow a nearly normal distribution?
+
+Yes, it appear that the most data located mainly at "fhgtmean" and it are decreased gradually at the standard deviation. 
+
+```{r }
+qqnorm(fdims$hgt)
+qqline(fdims$hgt)
+sim_norm <- rnorm(n = length(fdims$hgt), mean = fhgtmean, sd = fhgtsd)
+
+
+```
+
+Exercise 3
+Make a normal probability plot of sim_norm. Do all of the points fall on the line? How does this plot compare to the probability plot for the real data?
+
+The real data does not exactly fall on line. The plot are close to the real data.
+
+```{r }
+
+qqnormsim(fdims$hgt)
+
+```
+
+Execise 4
+Does the normal probability plot for fdims$hgt look similar to the plots created for the simulated data? That is, do plots provide evidence that the female heights are nearly normal?
+Yes, the normal probability plot for fdims$hgt look similar to the plots for simulated data, 
+Exercise 5
+Using the same technique, determine whether or not female weights appear to come from a normal distribution.
+
+```{r }
+
+1 - pnorm(q = 182, mean = fhgtmean, sd = fhgtsd)
+
+```
+
+
+```{r }
+
+sum(fdims$hgt > 182) / length(fdims$hgt)
+
+```
+
+Exercise 6
+Write out two probability questions that you would like to answer; one regarding female heights and one regarding female weights. Calculate the those probabilities using both the theoretical normal distribution as well as the empirical distribution (four probabilities in all). Which variable, height or weight, had a closer agreement between the two methods?
+
+What is the probability that a randomly chosen young adult female is less than 150 cm?
+
+theoretical normal distribution:
+```{r }
+pnorm(q = 150, mean = fhgtmean, sd = fhgtsd)
+
+```
+
+empirical distribution:
+```{r }
+
+sum(fdims$hgt < 150) / length(fdims$hgt)
+
+```
+
+What is the probability that a randomly chosen age of female is younger than 25?
+```{r }
+fagemean <-mean(fdims$age)
+fagesd <-sd(fdims$age)
+pnorm(q = 25, mean = fagemean, sd = fagesd)
+
+```
+empirical distribution:
+```{r }
+
+sum(fdims$age < 25) / length(fdims$age)
+
+```
+
