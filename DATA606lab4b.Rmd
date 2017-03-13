@@ -1,0 +1,89 @@
+---
+title: "DATA606lab4b"
+author: "jim lung"
+date: "03-10-2017"
+output: html_document
+---
+
+```{r }
+load("more/ames.RData")
+```
+
+```{r }
+population <- ames$Gr.Liv.Area
+samp <- sample(population, 60)
+summary(samp)
+hist(samp)
+```
+
+Exercise 1
+Describe the distribution of your sample. What would you say is the ：typical； size within your sample? Also state precisely what you interpreted ：typical； to mean.
+
+The distribution is unimodal and it is right skewed. The population is concentrated on lower end of the distribution at the range between 666 to 3500.
+
+Exercise 2
+Would you expect another student・s distribution to be identical to yours? Would you expect it to be similar? Why or why not?
+
+```{r }
+sample_mean <- mean(samp)
+sample_mean
+```
+
+```{r }
+se <- sd(samp) / sqrt(60)
+lower <- sample_mean - 1.96 * se
+upper <- sample_mean + 1.96 * se
+c(lower, upper)
+```
+Another student's distribution will be some different to mine even thought the same sample size are taken, it will be similar for the pattern of distribution. It is 95% confident interval that population mean is in the interval and the sample mean has some variability around the population mean which can be qualified using the standard deviation of the distribution of sample means.
+
+
+Exercise 3
+For the confidence interval to be valid, the sample mean must be normally distributed and have standard error s/n??????《s/n. What conditions must be met for this to be true?
+
+The sample size must be larger than 30 with independent observations.
+
+
+Exercise 4
+What does ：95% confidence； mean? If you・re not sure, see Section 4.2.2.
+
+It is 95% confident interval that population mean is in the interval and the sample mean has some variability around the population mean which can be qualified using the standard deviation of the distribution of sample means.
+
+```{r }
+mean(population)
+```
+
+Exercise 5
+Does your confidence interval capture the true average size of houses in Ames? If you are working on this lab in a classroom, does your neighbor・s interval capture this value?
+
+Yes, the population mean is in the interval.
+
+
+Exercise 6
+Each student in your class should have gotten a slightly different confidence interval. What proportion of those intervals would you expect to capture the true population mean? Why? If you are working in this lab in a classroom, collect data on the intervals created by other students in the class and calculate the proportion of intervals that capture the true population mean.
+
+95% confident interval that I would expect to capture the true population mean in interval because it considered with margin of error (Z*SE).
+
+```{r }
+samp_mean <- rep(NA, 50)
+samp_sd <- rep(NA, 50)
+n <- 60
+```
+
+```{r }
+for(i in 1:50){
+  samp <- sample(population, n) # obtain a sample of size n = 60 from the population
+  samp_mean[i] <- mean(samp)    # save sample mean in ith element of samp_mean
+  samp_sd[i] <- sd(samp)        # save sample sd in ith element of samp_sd
+}
+```
+
+```{r }
+lower_vector <- samp_mean - 1.96 * samp_sd / sqrt(n) 
+upper_vector <- samp_mean + 1.96 * samp_sd / sqrt(n)
+```
+
+```{r }
+c(lower_vector[1], upper_vector[1])
+```
+
