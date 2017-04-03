@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r }
-download.file("http://www.openintro.org/stat/data/nc.RData", destfile = "nc.RData")
+
 load("nc.RData")
 head(nc)
 ```
@@ -41,7 +41,7 @@ boxplot(nc$weight ~ nc$habit, data = nc, col = "yellow")
 ```
 
 ```{r }
-by(nc$weight, nc$habit, summary)
+by(nc$weight, nc$habit, mean)
 ```
 
 Exercise 3
@@ -58,7 +58,8 @@ H1: a difference in baby weights between the means for smokers and nonsmokers
 ```{r }
 library(openintro)
 library(BHH2)
-
+inference(y = nc$weight, x = nc$habit, est = "mean", type = "ht", null = 0, 
+          alternative = "twosided", method = "theoretical")
 ```
 
 Exercise 5
@@ -66,7 +67,8 @@ Change the type argument to "ci" to construct and record a confidence interval f
 
 
 ```{r }
-library(openintro)
-library(BHH2)
 
+inference(y = nc$weight, x = nc$habit, est = "mean", type = "ci", null = 0, 
+          alternative = "twosided", method = "theoretical", 
+          order = c("smoker","nonsmoker"))
 ```
