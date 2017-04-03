@@ -9,14 +9,13 @@ These percentages are sample statistics.
 
 Exercise 2
 
-
 The sample should be independent and each religiion should be at least 10 respondents in each country.
 
 Exercise 3
 
 ```{r }
 load("atheism.RData")
-
+View(atheism)
 ```
 
 Each row corresponds to a a survey respondent.
@@ -32,6 +31,15 @@ Exercise 5
 Write out the conditions for inference to construct a 95% confidence interval for the proportion of atheists in the United States in 2012. Are you confident all conditions are met?
 
 ```{r }
+nrow(subset(us12,us12$response=='atheist'))
+nrow(subset(us12,us12$response=='non-atheist'))
+```
+```{r }
+install.packages("lmPerm")
+install.packages("BHH2")
+```
+
+```{r }
 inference(us12$response, est = "proportion", type = "ci", method = "theoretical", 
           success = "atheist")
 
@@ -39,7 +47,131 @@ inference(us12$response, est = "proportion", type = "ci", method = "theoretical"
 
 Exercise 6
 Based on the R output, what is the margin of error for the estimate of the proportion of the proportion of atheists in US in 2012?
-
+```{r }
+# 95% confidence interval
+zscore <- 1.96
+SE <- 0.0069
+ME <- zscore*SE
+ME
+```
 
 Exercise 7
 Using the inference function, calculate confidence intervals for the proportion of atheists in 2012 in two other countries of your choice, and report the associated margins of error. Be sure to note whether the conditions for inference are met. It may be helpful to create new data sets for each of the two countries first, and then use these data sets in the inference function to construct the confidence intervals.
+
+# France
+```{r }
+Fran12 <- subset(atheism, nationality == "France" & year == "2012")
+nrow(subset(Fran12,Fran12$response=='atheist'))/nrow(Fran12)
+
+inference(Fran12$response, est = "proportion", type = "ci", method = "theoretical", 
+          success = "atheist")
+
+zscore <- 1.96
+SEfr <- 0.011
+MEfr <- zscore*SEfr
+MEfr
+# Margin of error is 0.02156
+```
+# Japan
+```{r }
+Jap12 <- subset(atheism, nationality == "Japan" & year == "2012")
+nrow(subset(Jap12,Jap12$response=='atheist'))/nrow(Jap12)
+
+inference(Jap12$response, est = "proportion", type = "ci", method = "theoretical", 
+          success = "atheist")
+
+zscore <- 1.96
+SEja <- 0.0132
+MEja <- zscore*SEja
+MEja
+# Margin of error is 0.025872
+```
+
+Exercise 8
+Describe the relationship between p and me.
+
+The Margin of error is largest during the population proportion is 0.5. The margin of error is 0 when population proportiion is 0 or 1.0. Therefore, the margin of error can be controlled by the population proportion.
+```{r}
+n <- 1000
+p <- seq(0, 1, 0.01)
+me <- 2 * sqrt(p * (1 - p)/n)
+plot(me ~ p, ylab = "Margin of Error", xlab = "Population Proportion")
+
+```
+
+Exercise 9
+Describe the sampling distribution of sample proportions at n=1040n=1040 and p=0.1p=0.1. Be sure to note the center, spread, and shape.
+Hint: Remember that R has functions such as mean to calculate summary statistics.
++This looks like a fairly normal unimodal distribution, centered at .10 (our p).
+
+```{r}
+p <- 0.1
+n <- 1040
+p_hats <- rep(0, 5000)
+
+for(i in 1:5000){
+  samp <- sample(c("atheist", "non_atheist"), n, replace = TRUE, prob = c(p, 1-p))
+  p_hats[i] <- sum(samp == "atheist")/n
+}
+
+hist(p_hats, main = "p = 0.1, n = 1040", xlim = c(0, 0.18))
+
+```
+
+```{r}
+mean(p_hats)
+sd(p_hats)
+summary(p_hats)
+
+```
+
+Exercise 10
+for 
+n = 400, p=0.1
+n = 1040, p=0.02
+n = 400, p=0.02
+
+```{r}
+p <- 0.1
+n <- 400
+p_hats400 <- rep(0, 5000)
+
+for(i in 1:5000){
+  samp <- sample(c("atheist", "non_atheist"), n, replace = TRUE, prob = c(p, 1-p))
+  p_hats400[i] <- sum(samp == "atheist")/n
+}
+
+
+
+p <- 0.02
+n <- 400
+phats400.2 <- rep(0, 5000)
+
+for(i in 1:5000){
+  samp <- sample(c("atheist", "non_atheist"), n, replace = TRUE, prob = c(p, 1-p))
+  phats400.2[i] <- sum(samp == "atheist")/n
+}
+
+
+p <- 0.02
+n <- 1040
+p_hats1040 <- rep(0, 5000)
+
+for(i in 1:5000){
+  samp <- sample(c("atheist", "non_atheist"), n, replace = TRUE, prob = c(p, 1-p))
+  p_hats1040[i] <- sum(samp == "atheist")/n
+}
+
+par(mfrow = c(2, 2))
+#par(mfrow = c(1, 1))
+hist(p_hats1040, main = "p = 0.02, n = 1040", xlim = c(0, 0.18))
+hist(p_hats, main = "p = 0.1, n = 1040", xlim = c(0, 0.18))
+hist(p_hats400, main = "p = 0.1, n = 400", xlim = c(0, 0.18))
+hist(phats400.2, main = "p = 0.02, n = 400", xlim = c(0, 0.18))
+
+```
+
+Exercise 11
+Australia has a sample proportion of 0.1 on a sample size of 1040, and that Ecuador has a sample proportion of 0.02 on 400 subjects. Let¡¦s suppose for this exercise that these point estimates are actually the truth. Then given the shape of their respective sampling distributions, do you think it is sensible to proceed with inference and report margin of errors, as the reports does?
+
+the sample size of Ecuador is 8 - (0.02 x 400), it is fail to meet the condition >10 sample size, but the austrialia has 104 - (1040 x 0.1) which meet the condition.
