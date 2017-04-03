@@ -1,0 +1,72 @@
+---
+title: "DATA606lab5"
+author: "jim lung"
+date: "03-30-2017"
+output: html_document
+---
+
+```{r }
+download.file("http://www.openintro.org/stat/data/nc.RData", destfile = "nc.RData")
+load("nc.RData")
+head(nc)
+```
+
+Exercise 1
+What are the cases in this data set? How many cases are there in our sample?
+
+```{r }
+summary(nc)
+nrow(nc)
+
+# there are 1000 case in sample
+# the case are in character as Maturity, premie, marital, lowbirthweight, gender, habit. whitemom and in numerical as fage, mage, weeks,gained, visits, weight.
+```
+```{r }
+# For numerical variables, the graph:
+hist(nc$fage)
+hist(nc$mage)
+hist(nc$weeks)
+hist(nc$gained)
+hist(nc$visits)
+hist(nc$weight)
+
+```
+
+Exercise 2
+Make a side-by-side boxplot of habit and weight. What does the plot highlight about the relationship between these two variables?
+
+```{r }
+boxplot(nc$weight ~ nc$habit, data = nc, col = "yellow")
+# it is less weight of baby for smoker
+```
+
+```{r }
+by(nc$weight, nc$habit, summary)
+```
+
+Exercise 3
+Check if the conditions necessary for inference are satisfied. Note that you will need to obtain sample sizes to check the conditions. You can compute the group size using the same by command above but replacing mean with  length.
+
+```{r }
+by(nc$weight, nc$habit, length)
+```
+
+Exercise 4
+Write the hypotheses for testing if the average weights of babies born to smoking and non-smoking mothers are different.
+H0: no difference in baby¡¦s weights between the means for smokers and nonsmokers 
+H1: a difference in baby weights between the means for smokers and nonsmokers 
+```{r }
+library(openintro)
+library(BHH2)
+
+```
+
+Exercise 5
+Change the type argument to "ci" to construct and record a confidence interval for the difference between the weights of babies born to smoking and non-smoking mothers.
+
+
+```{r }
+library(openintro)
+library(BHH2)
+
+```
