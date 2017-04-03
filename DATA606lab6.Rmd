@@ -1,0 +1,45 @@
+---
+title: "DATA606lab6"
+author: "jim lung"
+date: "03-30-2017ค้"
+output: html_document
+---
+Exercise 1
+These percentages are sample statistics.
+
+Exercise 2
+
+
+The sample should be independent and each religiion should be at least 10 respondents in each country.
+
+Exercise 3
+
+```{r }
+load("atheism.RData")
+
+```
+
+Each row corresponds to a a survey respondent.
+
+Exercise 4
+```{r }
+us12 <- subset(atheism, nationality == "United States" & year == "2012")
+
+nrow(subset(us12,us12$response=='atheist'))/nrow(us12)
+```
+
+Exercise 5
+Write out the conditions for inference to construct a 95% confidence interval for the proportion of atheists in the United States in 2012. Are you confident all conditions are met?
+
+```{r }
+inference(us12$response, est = "proportion", type = "ci", method = "theoretical", 
+          success = "atheist")
+
+```
+
+Exercise 6
+Based on the R output, what is the margin of error for the estimate of the proportion of the proportion of atheists in US in 2012?
+
+
+Exercise 7
+Using the inference function, calculate confidence intervals for the proportion of atheists in 2012 in two other countries of your choice, and report the associated margins of error. Be sure to note whether the conditions for inference are met. It may be helpful to create new data sets for each of the two countries first, and then use these data sets in the inference function to construct the confidence intervals.
